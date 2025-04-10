@@ -1,0 +1,61 @@
+version: '3'
+
+tasks:
+  setup/front:
+    desc: Build the front
+    dir: front
+    cmds:
+      - npm run build
+  setup/backend:
+    desc: Build the backend
+    dir: backend
+    cmds:
+      - poetry install
+  setup:
+    desc: Build the front and backend
+    deps:
+      - setup/front
+      - setup/backend
+  serve/front:
+    desc: Serve the front
+    dir: front
+    cmds:
+      - npm run dev
+
+  serve/backend:
+    desc: Serve the backend
+    dir: backend
+    cmds:
+      - poetry run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+  serve:
+    desc: Serve the front and backend
+    deps:
+      - serve/front
+      - serve/backend
+
+  serve/storybook:
+    desc: Serve the storybook
+    dir: front
+    cmds:
+      - npm run storybook
+
+  docker/build:
+    desc: Build the docker image
+    cmds:
+      - docker build -t fastapi-react-app .
+
+  docker/run:
+    desc: Run the docker image
+    cmds:
+      - docker run -p 8000:8000 fastapi-react-app
+
+  docker:
+    desc: Build and run the docker image
+    deps:
+      - docker/build
+      - docker/run
+
+  docker/stop:
+    desc: Stop the docker image
+    cmds:
+      - docker stop fastapi-react-app
