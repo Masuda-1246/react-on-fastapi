@@ -5,6 +5,7 @@ tasks:
     desc: Build the front
     dir: front
     cmds:
+      - npm install
       - npm run build
   setup/backend:
     desc: Build the backend
