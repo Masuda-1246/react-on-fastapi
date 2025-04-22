@@ -60,3 +60,33 @@ tasks:
     desc: Stop the docker image
     cmds:
       - docker stop fastapi-react-app
+
+  # Docker Compose関連のコマンド
+  docker-compose/build:
+    desc: Docker Composeでイメージをビルド
+    cmds:
+      - docker-compose build
+
+  docker-compose/up:
+    desc: Docker Composeでコンテナを起動（バックグラウンド実行）
+    cmds:
+      - docker-compose up -d
+
+  docker-compose/down:
+    desc: Docker Composeでコンテナを停止・削除
+    cmds:
+      - docker-compose down
+
+  docker-compose/logs:
+    desc: Docker Composeのログを表示
+    cmds:
+      - docker-compose logs -f
+
+  docker-compose:
+    desc: Docker Composeでビルドして起動
+    deps:
+      - setup/front
+      - docker-compose/build
+      - docker-compose/up
+    cmds:
+      - echo "Docker Composeが起動しました。ログを表示するには 'task docker-compose/logs' を実行してください。"
