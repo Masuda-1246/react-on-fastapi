@@ -54,7 +54,7 @@ function App() {
     try {
       const response = await fetch('/api/blog')
       if (!response.ok) {
-        throw new Error('ブログ記事の取得に失敗しました')
+        throw new Error('ブログ記事の取得に失敗しました!')
       }
       const data = await response.json()
       setBlogPosts(data)

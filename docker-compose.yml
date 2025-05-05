@@ -1,20 +1,6 @@
 version: '3'
 
 services:
-  web:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
-    environment:
-      - PYTHONPATH=/app
-      - DATABASE_URL=postgresql://postgres:postgres@db/postgres
-      - BASIC_AUTH_USERNAME=admin
-      - BASIC_AUTH_PASSWORD=password
-
   db:
     image: postgres:13-alpine
     volumes:

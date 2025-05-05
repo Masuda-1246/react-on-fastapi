@@ -18,7 +18,7 @@ from sqlalchemy.orm import sessionmaker, Session
 load_dotenv()
 
 # データベース接続設定
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@db/postgres")
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/postgres")
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
@@ -118,7 +118,7 @@ class BlogPost(BaseModel):
     updated_at: Optional[datetime] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class BlogPostCreate(BaseModel):
     title: str
@@ -186,11 +186,19 @@ async def delete_blog_post(post_id: str, db: Session = Depends(get_db)):
     return {"message": "ブログ記事が削除されました"}
 
 # 静的ファイルの提供設定
-static_dir = Path(__file__).parent.parent.parent / "front" / "dist"
+static_dir = Path(__file__).parent / "dist"
 if os.path.exists(static_dir):
     # 静的アセットの提供
     if os.path.exists(static_dir / "assets"):
         app.mount("/assets", StaticFiles(directory=static_dir / "assets"), name="assets")
+    
+    # faviconとして使用するvite.svgファイルの提供（認証なし）
+    @app.get("/vite.svg", include_in_schema=False)
+    async def get_favicon():
+        favicon_path = static_dir / "vite.svg"
+        if os.path.exists(favicon_path):
+            return FileResponse(favicon_path)
+        raise HTTPException(status_code=404, detail="Favicon not found")
     
     # SPAのフォールバックルート
     @app.get("/{full_path:path}")
@@ -201,3 +209,14 @@ if os.path.exists(static_dir):
             return FileResponse(index_path)
         raise HTTPException(status_code=404, detail="File not found")
 
+if __name__ == "__main__":
+    import uvicorn
+    # distディレクトリの絶対パスを取得
+    dist_dir = str(Path(__file__).parent / "dist")
+    print(dist_dir)
+    uvicorn.run(
+        "main:app", 
+        host="127.0.0.1", 
+        port=8080, 
+        reload=True,
+    )
