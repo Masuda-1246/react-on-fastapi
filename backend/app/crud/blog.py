@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime
+from datetime import datetime, UTC
 
 from sqlalchemy.orm import Session
 
@@ -17,7 +17,7 @@ def get_blog_post(db: Session, post_id: str) -> BlogPostModel | None:
 
 def create_blog_post(db: Session, post: BlogPostCreate) -> BlogPostModel:
     """新しいブログ記事を作成する"""
-    now = datetime.now(datetime.UTC)
+    now = datetime.now(UTC)
     post_id = str(uuid.uuid4())
 
     db_post = BlogPostModel(
@@ -46,7 +46,7 @@ def update_blog_post(db: Session, post_id: str, post: BlogPostUpdate) -> BlogPos
     for key, value in update_data.items():
         setattr(db_post, key, value)
 
-    db_post.updated_at = datetime.now(datetime.UTC)
+    db_post.updated_at = datetime.now(UTC)
     db.commit()
     db.refresh(db_post)
 
