@@ -5,6 +5,27 @@
     "version": "1.0.0"
   },
   "paths": {
+    "/api/health": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Health Check",
+        "operationId": "health_check_api_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthCheckResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/blog/": {
       "get": {
         "tags": [
@@ -187,65 +208,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
+                  "$ref": "#/components/schemas/HealthCheckResponse"
                 }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/health": {
-      "get": {
-        "summary": "Health Check",
-        "operationId": "health_check_api_health_get",
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          }
-        }
-      }
-    },
-    "/{full_path}": {
-      "get": {
-        "summary": "Serve React App",
-        "operationId": "serve_react_app__full_path__get",
-        "security": [
-          {
-            "HTTPBasic": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "full_path",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Full Path"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
               }
             }
           },
@@ -389,6 +354,20 @@
         "type": "object",
         "title": "HTTPValidationError"
       },
+      "HealthCheckResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "HealthCheckResponse",
+        "description": "\u30d8\u30eb\u30b9\u30c1\u30a7\u30c3\u30af\u30ec\u30b9\u30dd\u30f3\u30b9\u30e2\u30c7\u30eb"
+      },
       "ValidationError": {
         "properties": {
           "loc": {
@@ -421,12 +400,6 @@
           "type"
         ],
         "title": "ValidationError"
-      }
-    },
-    "securitySchemes": {
-      "HTTPBasic": {
-        "type": "http",
-        "scheme": "basic"
       }
     }
   }

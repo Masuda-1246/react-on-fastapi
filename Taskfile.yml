@@ -72,3 +72,21 @@ tasks:
     dir: backend
     cmds:
       - docker stop {{.CONTAINER_NAME}}
+
+  export-openapi:
+    desc: Generate the api
+    dir: backend
+    cmds:
+      - poetry run python scripts/export_openapi.py
+
+  generate-api/front:
+    desc: Generate the api
+    dir: front
+    cmds:
+      - npm run generate-api
+
+  generate-api:
+    desc: Generate the api
+    deps:
+      - export-openapi
+      - generate-api/front
