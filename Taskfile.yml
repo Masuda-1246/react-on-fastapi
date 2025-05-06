@@ -22,12 +22,11 @@ tasks:
     dir: front
     cmds:
       - npm run dev
-
   serve/backend:
     desc: Serve the backend
     dir: backend
     cmds:
-      - poetry run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+      - poetry run python main.py
   serve:
     desc: Serve the front and backend
     deps:

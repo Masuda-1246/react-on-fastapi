@@ -51,7 +51,7 @@ function App() {
   const fetchBlogPosts = async () => {
     setIsLoading(true)
     try {
-      const response = await fetch('/api/blog')
+      const response = await fetch('/api/blog/')
       if (!response.ok) {
         throw new Error('ブログ記事の取得に失敗しました!')
       }
@@ -75,7 +75,7 @@ function App() {
     
     setIsLoading(true)
     try {
-      const response = await fetch('/api/blog', {
+      const response = await fetch('/api/blog/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
