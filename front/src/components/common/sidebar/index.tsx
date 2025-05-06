@@ -30,7 +30,7 @@ const Sidebar: FC<SidebarProps> = ({ children, isOpen = true }) => {
   
   return (
     <div 
-      className={`w-64 bg-white shadow-md h-full overflow-y-auto transform transition-all duration-300 ease-in-out ${
+      className={`w-64 bg-white shadow-md h-full overflow-y-auto transform transition-all duration-300 ease-in-out fixed z-20 ${
         isOpen ? 'translate-x-0' : '-translate-x-full'
       }`}
     >

@@ -21,19 +21,21 @@ const Layout: FC<LayoutProps> = ({ children, showSidebar: initialShowSidebar = f
         toggleSidebar={toggleSidebar}
         isSidebarOpen={isSidebarOpen}
       />
-      <div className="flex flex-1 overflow-hidden relative">
-        <Sidebar isOpen={isSidebarOpen}>{sidebarContent}</Sidebar>
+      <div className="flex flex-1 overflow-hidden">
+        {/* サイドバー - 絶対配置ではなく通常のフレックスアイテムとして配置 */}
         <div 
-          className={`flex-1 overflow-auto p-6 transition-all duration-300 ease-in-out ${
-            isSidebarOpen ? 'ml-0' : 'ml-0 md:pl-0'
+          className={`transition-all duration-300 ease-in-out flex-shrink-0 ${
+            isSidebarOpen ? 'w-64' : 'w-0'
           }`}
-          style={{ 
-            width: '100%',
-            transitionProperty: 'margin, padding',
-          }}
         >
+          <Sidebar isOpen={isSidebarOpen}>{sidebarContent}</Sidebar>
+        </div>
+        
+        {/* メインコンテンツ */}
+        <div className="flex-1 overflow-auto p-6">
           {children}
         </div>
+        
         {/* オーバーレイ（モバイルビュー用） */}
         {isSidebarOpen && (
           <div 
