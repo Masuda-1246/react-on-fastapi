@@ -1,5 +1,9 @@
 version: '3'
 
+vars:
+  APP_IMAGE: fastapi-react-app
+  CONTAINER_NAME: fastapi-react-container
+
 tasks:
   setup/front:
     desc: Build the front
@@ -12,10 +16,15 @@ tasks:
     dir: backend
     cmds:
       - poetry install
+  setup/docker:
+    desc: Build the docker image
+    cmds:
+      - docker-compose up --build -d
   setup:
     desc: Build the front and backend
     deps:
       - setup/front
+      - setup/docker
       - setup/backend
   serve/front:
     desc: Serve the front
@@ -41,13 +50,16 @@ tasks:
 
   docker/build:
     desc: Build the docker image
+    dir: backend
     cmds:
-      - docker build -t fastapi-react-app .
+      - docker build -t {{.APP_IMAGE}} .
 
   docker/run:
     desc: Run the docker image
+    dir: backend
     cmds:
-      - docker run -p 8000:8000 fastapi-react-app
+      - docker rm -f {{.CONTAINER_NAME}} || true
+      - docker run -d -p 8000:8000 --env-file .env --name {{.CONTAINER_NAME}} {{.APP_IMAGE}}
 
   docker:
     desc: Build and run the docker image
@@ -57,35 +69,6 @@ tasks:
 
   docker/stop:
     desc: Stop the docker image
+    dir: backend
     cmds:
-      - docker stop fastapi-react-app
-
-  # Docker Compose関連のコマンド
-  docker-compose/build:
-    desc: Docker Composeでイメージをビルド
-    cmds:
-      - docker-compose build
-
-  docker-compose/up:
-    desc: Docker Composeでコンテナを起動（バックグラウンド実行）
-    cmds:
-      - docker-compose up -d
-
-  docker-compose/down:
-    desc: Docker Composeでコンテナを停止・削除
-    cmds:
-      - docker-compose down
-
-  docker-compose/logs:
-    desc: Docker Composeのログを表示
-    cmds:
-      - docker-compose logs -f
-
-  docker-compose:
-    desc: Docker Composeでビルドして起動
-    deps:
-      - setup/front
-      - docker-compose/build
-      - docker-compose/up
-    cmds:
-      - echo "Docker Composeが起動しました。ログを表示するには 'task docker-compose/logs' を実行してください。"
+      - docker stop {{.CONTAINER_NAME}}

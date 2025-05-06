@@ -13,9 +13,11 @@ RUN poetry config virtualenvs.create false \
 
 # アプリケーションコードのコピー
 COPY app/ ./app/
+COPY dist/ ./dist/
+COPY main.py ./
 
 # ポートの公開
 EXPOSE 8080
 
-# アプリケーションの起動
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
+# アプリケーションの起動（Gunicornを使用してUvicornワーカーを管理）
+CMD ["gunicorn", "main:app", "--workers", "4", "--worker-class", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8080", "--access-logfile", "-"]
