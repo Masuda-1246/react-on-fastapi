@@ -28,12 +28,12 @@ const Sidebar: FC<SidebarProps> = ({ children, isOpen = true }) => {
     { path: '/blog/create', label: '新規投稿', icon: 'M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z' },
   ];
   
+  if (!isOpen) {
+    return null;
+  }
+  
   return (
-    <div 
-      className={`w-64 bg-white shadow-md h-full overflow-y-auto transform transition-all duration-300 ease-in-out fixed z-20 ${
-        isOpen ? 'translate-x-0' : '-translate-x-full'
-      }`}
-    >
+    <div className="w-64 bg-white shadow-md h-full overflow-y-auto">
       <div className="p-4">
         {children || (
           <nav className="space-y-1">

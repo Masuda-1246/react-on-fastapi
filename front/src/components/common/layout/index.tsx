@@ -21,18 +21,18 @@ const Layout: FC<LayoutProps> = ({ children, showSidebar: initialShowSidebar = f
         toggleSidebar={toggleSidebar}
         isSidebarOpen={isSidebarOpen}
       />
-      <div className="flex flex-1 overflow-hidden">
-        {/* サイドバー - 絶対配置ではなく通常のフレックスアイテムとして配置 */}
+      <div className="relative flex-1 overflow-hidden">
+        {/* サイドバー - 絶対配置 */}
         <div 
-          className={`transition-all duration-300 ease-in-out flex-shrink-0 ${
-            isSidebarOpen ? 'w-64' : 'w-0'
+          className={`absolute top-0 left-0 z-20 h-full ${
+            isSidebarOpen ? 'block' : 'hidden'
           }`}
         >
-          <Sidebar isOpen={isSidebarOpen}>{sidebarContent}</Sidebar>
+          <Sidebar isOpen={true}>{sidebarContent}</Sidebar>
         </div>
         
-        {/* メインコンテンツ */}
-        <div className="flex-1 overflow-auto p-6">
+        {/* メインコンテンツ - 常に左寄せ */}
+        <div className="h-full overflow-auto p-6 mx-auto max-w-7xl w-full">
           {children}
         </div>
         

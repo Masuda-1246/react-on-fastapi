@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { useGetAllBlogPostsApiBlogGet } from '../../api/generated/fastAPIReactBackend';
+import { useDeleteBlogPostApiBlogPostIdDelete, useGetAllBlogPostsApiBlogGet } from '../../api/generated/fastAPIReactBackend';
 import { BlogPost } from '../../api/model';
 
 const BlogListPage: FC = () => {
@@ -19,12 +19,22 @@ const BlogListPage: FC = () => {
     // ステータスフィルターは一時的に削除（実際のAPIにstatusプロパティがないため）
     return matchesSearch;
   });
+
+  const deleteMutation = useDeleteBlogPostApiBlogPostIdDelete(
+    {
+      mutation: {
+        onSuccess: () => {
+          window.location.href = '/blog';
+        }
+      }
+    }
+  );
   
   // 投稿を削除する関数（実際はAPI呼び出し）
   const handleDeletePost = (postId: string) => {
     if (window.confirm('この投稿を削除してもよろしいですか？')) {
       console.log('投稿を削除:', postId);
-      // 実際にはAPI呼び出しを実装
+      deleteMutation.mutate({ postId });
     }
   };
 
